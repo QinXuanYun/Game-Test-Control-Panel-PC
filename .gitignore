@@ -1,0 +1,12 @@
+# 系统垃圾
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 依赖（本项目无依赖，预留）
+node_modules/

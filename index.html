@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Panel</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══════════════ 左栏 ══════════════ -->
+  <aside class="col col-left">
+
+    <!-- 左上：筛选区 -->
+    <section class="card" id="filterPanel">
+      <h2 class="card-title">🔍 组合筛选</h2>
+      <div class="filter-row">
+        <input type="text" id="filterInput" class="neu-input"
+               placeholder="关键词，空格分隔多条件（AND）">
+        <button class="neu-btn" id="filterBtn">查询</button>
+      </div>
+      <p class="hint" id="filterHint">点击查询后仅显示命中的组合；清空关键词再点查询恢复全部</p>
+    </section>
+
+    <!-- 左中：组合填写区 -->
+    <section class="card" id="comboPanel">
+      <h2 class="card-title">📝 行动组合 <span class="badge" id="comboCountBadge">0 / 20</span></h2>
+      <ol class="combo-list" id="comboList"><!-- JS 渲染 20 个组合 --></ol>
+    </section>
+
+    <!-- 左下：按钮区 -->
+    <section class="card action-panel">
+      <button class="neu-btn btn-accent-blue" id="saveBtn">💾 保存</button>
+      <button class="neu-btn" id="resetBtn">↺ 重置</button>
+      <button class="neu-btn btn-accent-pink" id="showBtn">🖼 显示</button>
+    </section>
+  </aside>
+
+  <!-- ══════════════ 中栏 ══════════════ -->
+  <main class="col col-center">
+
+    <!-- 中上：综合区（计时 + 提醒设置） -->
+    <section class="card" id="timerPanel">
+      <h2 class="card-title">⏱ 游戏计时</h2>
+
+      <div class="timer-display" id="timerDisplay">
+        <span class="timer-red-tip" id="timerRedTip">请先“开始”计时</span>
+        <span class="timer-time hidden" id="timerTime">00:00:00</span>
+      </div>
+
+      <div class="reminder-setter">
+        <h3 class="sub-title">定时循环提醒（最多 20 个）</h3>
+        <div class="setter-row">
+          <select id="remComboSel" class="neu-input small"></select>
+          <input type="number" id="remMinInput" class="neu-input small" min="1" max="999" placeholder="间隔分钟">
+          <button class="neu-btn small" id="remAddBtn">添加</button>
+        </div>
+      </div>
+
+      <div class="timer-buttons">
+        <button class="neu-btn btn-accent-blue big" id="startBtn">开始</button>
+        <button class="neu-btn big" id="pauseBtn">暂停</button>
+        <button class="neu-btn big" id="resumeBtn">继续</button>
+        <button class="neu-btn small" id="timerResetBtn">重置</button>
+      </div>
+    </section>
+
+    <!-- 中中：提醒列表 -->
+    <section class="card" id="reminderListPanel">
+      <div class="panel-head-row">
+        <h2 class="card-title">🔔 循环提醒列表</h2>
+        <label class="mute-switch"><input type="checkbox" id="muteChk"> 静音</label>
+      </div>
+      <ol class="reminder-list" id="reminderList"><li class="hint">暂无提醒事件，在上方添加</li></ol>
+    </section>
+
+    <!-- 中下：结束区 -->
+    <section class="card end-panel">
+      <button class="neu-btn btn-end" id="endBtn">■ 结束</button>
+      <button class="neu-btn btn-restart" id="restartBtn" disabled>↻ 重新开始</button>
+    </section>
+  </main>
+
+  <!-- ══════════════ 右栏 ══════════════ -->
+  <aside class="col col-right">
+
+    <!-- 右上：图片区 -->
+    <section class="card image-panel" id="imagePanel">
+      <h2 class="card-title">🖼 图片区</h2>
+      <div class="image-stage" id="imageStage" title="点击选择本地图片">
+        <span class="hint" id="imageHint">＋ 点击选择本地图片（或由左侧“显示”生成）</span>
+        <img id="stageImg" alt="已选图片" hidden>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </section>
+
+    <!-- 右中：笔记区 -->
+    <section class="card notes-panel">
+      <div class="panel-head-row">
+        <h2 class="card-title">📋 笔记</h2>
+        <button class="neu-btn small" id="noteAddBtn">＋ 添加条目</button>
+      </div>
+      <ol class="note-list" id="noteList"></ol>
+    </section>
+
+    <!-- 右下：骰子区 -->
+    <section class="card dice-panel">
+      <div class="panel-head-row">
+        <h2 class="card-title">🎲 随机骰子</h2>
+        <button class="neu-btn btn-accent-blue" id="rollBtn">🎯 投掷</button>
+      </div>
+      <div id="diceGroups"></div>
+    </section>
+  </aside>
+</div>
+
+<!-- 灯箱 -->
+<div class="lightbox hidden" id="lightbox">
+  <div class="lightbox-toolbar">
+    <button class="neu-btn small" id="lbZoomOut">－</button>
+    <span id="lbZoomLabel">100%</span>
+    <button class="neu-btn small" id="lbZoomIn">＋</button>
+    <button class="neu-btn small" id="lbDownload">⬇ 下载</button>
+    <button class="neu-btn small" id="lbClose">✕ 关闭</button>
+  </div>
+  <div class="lightbox-stage" id="lbStage">
+    <img id="lbImg" alt="灯箱大图">
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="js/store.js"></script>
+<script src="js/combos.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/reminders.js"></script>
+<script src="js/image.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/dice.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
