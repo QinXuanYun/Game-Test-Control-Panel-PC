@@ -30,7 +30,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './Game-Test-Control-Panel-PC'   # 👈 你的静态文件在 website/ 目录下
+          path: '.'   # 👈 你的静态文件在 website/ 目录下
 
       - name: Deploy to GitHub Pages
         id: deployment
